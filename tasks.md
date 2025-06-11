@@ -41,7 +41,7 @@
     * [ ] Task 2.4.3: Validate parsing on emulator.  
     * [ ] Task 2.4.4: Validate parsing on real device.  
     * [ ] Task 2.4.5: Log edge cases and failures.  
-  * [ ] Task 2.5: Implement Local Storage for Parsed Transactions  
+  * [x] Task 2.5: Implement Local Storage for Parsed Transactions  
     * [ ] Task 2.5.1: Create repository service.  
     * [x] Task 2.5.2: Persist parsed data to Isar.  
   * [x] Task 2.6: Display Parsed Transactions in List View  
@@ -111,4 +111,4 @@
 * Add code comments and keep feature docs current.  
 * Implement unit tests, especially for parsing and storage logic.  
 * Handle permission denials, file errors, and sync failures gracefully.  
-* Ensure compliance with the Kenya Data Protection Act (2019).  
+* Ensure compliance with the Kenya Data Protection Act (2019). 
