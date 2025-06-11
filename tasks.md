@@ -30,11 +30,11 @@
     * [x] Task 2.2.1: Add flutter_sms_inbox or sms_advanced dependency to pubspec.yaml (for Android).  
     * [x] Task 2.2.2: Create a service/repository to query the Android SMS inbox.  
     * [x] Task 2.2.3: Implement filtering logic to identify potential M-Pesa transaction messages.  
-  * [ ] Task 2.3: Implement Robust M-Pesa SMS Parsing Logic  
-    * [ ] Task 2.3.1: Define regex patterns for transaction types (Money In, Out, PayBill, etc.).  
-    * [ ] Task 2.3.2: Create parsing functions to extract all relevant fields.  
-    * [ ] Task 2.3.3: Preprocess SMS content before parsing.  
-    * [ ] Task 2.3.4: Modularise parsing functions.  
+  * [x] Task 2.3: Implement Robust M-Pesa SMS Parsing Logic  
+    * [x] Task 2.3.1: Define regex patterns for transaction types (Money In, Out, PayBill, etc.).  
+    * [x] Task 2.3.2: Create parsing functions to extract all relevant fields.  
+    * [x] Task 2.3.3: Preprocess SMS content before parsing.  
+    * [x] Task 2.3.4: Modularise parsing functions.  
   * [ ] Task 2.4: Validate SMS Parsing on Emulator and My Phone  
     * [ ] Task 2.4.1: Prepare real SMS test set.  
     * [ ] Task 2.4.2: Build test interface.  
@@ -43,7 +43,7 @@
     * [ ] Task 2.4.5: Log edge cases and failures.  
   * [x] Task 2.5: Implement Local Storage for Parsed Transactions  
     * [ ] Task 2.5.1: Create repository service.  
-    * [x] Task 2.5.2: Persist parsed data to Isar.  
+    * [ ] Task 2.5.2: Persist parsed data to Isar.  
   * [x] Task 2.6: Display Parsed Transactions in List View  
     * [x] Task 2.6.1: Design transaction list UI.  
     * [x] Task 2.6.2: Fetch from Isar and render list.  
