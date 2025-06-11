@@ -19,17 +19,17 @@
     * [x] Task 1.2.5: Initialize Isar database instance in Flutter app.  
 
 * **Phase 2: Core SMS-Centric Feature Development (MVP Focus)**  
-  * [ ] Task 2.1: Implement SMS Reading Permission Request in Flutter  
-    * [ ] Task 2.1.1: Add permission_handler dependency to pubspec.yaml.  
-    * [ ] Task 2.1.2: Implement permission check for READ_SMS and RECEIVE_SMS on Android.  
-    * [ ] Task 2.1.3: Implement logic to request permissions if not granted.  
-    * [ ] Task 2.1.4: Design and implement a clear, user-friendly explanation screen/dialog for why SMS permissions are needed.  
-    * [ ] Task 2.1.5: Implement graceful handling for permission denials (e.g., offer manual input alternative).  
-    * [ ] Task 2.1.6: Update AndroidManifest.xml with required SMS permissions.  
-  * [ ] Task 2.2: Develop Initial M-Pesa SMS Identification Logic  
-    * [ ] Task 2.2.1: Add flutter_sms_inbox or sms_advanced dependency to pubspec.yaml (for Android).  
-    * [ ] Task 2.2.2: Create a service/repository to query the Android SMS inbox.  
-    * [ ] Task 2.2.3: Implement filtering logic to identify potential M-Pesa transaction messages.  
+  * [x] Task 2.1: Implement SMS Reading Permission Request in Flutter  
+    * [x] Task 2.1.1: Add permission_handler dependency to pubspec.yaml.  
+    * [x] Task 2.1.2: Implement permission check for READ_SMS and RECEIVE_SMS on Android.  
+    * [x] Task 2.1.3: Implement logic to request permissions if not granted.  
+    * [x] Task 2.1.4: Design and implement a clear, user-friendly explanation screen/dialog for why SMS permissions are needed.  
+    * [x] Task 2.1.5: Implement graceful handling for permission denials (e.g., offer manual input alternative).  
+    * [x] Task 2.1.6: Update AndroidManifest.xml with required SMS permissions.  
+  * [x] Task 2.2: Develop Initial M-Pesa SMS Identification Logic  
+    * [x] Task 2.2.1: Add flutter_sms_inbox or sms_advanced dependency to pubspec.yaml (for Android).  
+    * [x] Task 2.2.2: Create a service/repository to query the Android SMS inbox.  
+    * [x] Task 2.2.3: Implement filtering logic to identify potential M-Pesa transaction messages.  
   * [ ] Task 2.3: Implement Robust M-Pesa SMS Parsing Logic  
     * [ ] Task 2.3.1: Define regex patterns for transaction types (Money In, Out, PayBill, etc.).  
     * [ ] Task 2.3.2: Create parsing functions to extract all relevant fields.  
@@ -43,10 +43,10 @@
     * [ ] Task 2.4.5: Log edge cases and failures.  
   * [ ] Task 2.5: Implement Local Storage for Parsed Transactions  
     * [ ] Task 2.5.1: Create repository service.  
-    * [ ] Task 2.5.2: Persist parsed data to Isar.  
-  * [ ] Task 2.6: Display Parsed Transactions in List View  
-    * [ ] Task 2.6.1: Design transaction list UI.  
-    * [ ] Task 2.6.2: Fetch from Isar and render list.  
+    * [x] Task 2.5.2: Persist parsed data to Isar.  
+  * [x] Task 2.6: Display Parsed Transactions in List View  
+    * [x] Task 2.6.1: Design transaction list UI.  
+    * [x] Task 2.6.2: Fetch from Isar and render list.  
     * [ ] Task 2.6.3: Style by transaction type.  
   * [ ] Task 2.7: Add Basic User Categorisation Interface  
     * [ ] Task 2.7.1: Build category input (dropdown or text).  
