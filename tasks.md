@@ -52,11 +52,11 @@
     * [x] Task 2.7.1: Build category input (dropdown or text).  
     * [x] Task 2.7.2: Update category field in Isar.  
   * [x] Task 2.8: Implement Category Management (Add, Edit, Delete)
-    * [ ] Task 2.8.1: Define CategoryEntity schema with Isar annotations.
-    * [ ] Task 2.8.2: Implement repository and use cases for CRUD operations on categories.
+    * [x] Task 2.8.1: Define CategoryEntity schema with Isar annotations.
+    * [x] Task 2.8.2: Implement repository and use cases for CRUD operations on categories.
     * [x] Task 2.8.3: Design and implement a UI for category management (e.g., a dedicated settings page).
     * [x] Task 2.8.4: Integrate dynamic categories into the transaction categorization flow.
-    * [ ] Task 2.8.5: Add unit tests for category management logic.
+    * [x] Task 2.8.5: Add unit tests for category management logic.
 
 ---
 
