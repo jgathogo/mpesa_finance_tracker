@@ -16,6 +16,10 @@ import 'features/categories/domain/usecases/get_categories.dart';
 import 'features/categories/domain/usecases/update_category.dart';
 import 'features/categories/domain/usecases/delete_category.dart';
 import 'features/categories/presentation/bloc/category_cubit.dart';
+import 'features/categories/data/repositories/isar_category_data_source.dart';
+import 'features/transactions/domain/repositories/sms_repository.dart';
+import 'features/transactions/domain/repositories/transaction_repository.dart';
+import 'features/categories/domain/repositories/category_repository.dart';
 
 final GetIt sl = GetIt.instance;
 
@@ -26,13 +30,13 @@ Future<void> main() async {
   await sl<IsarService>().init();
 
   sl.registerLazySingleton<SmsInboxService>(() => SmsInboxService());
-  sl.registerLazySingleton<SmsRepositoryImpl>(() => SmsRepositoryImpl(sl()));
+  sl.registerLazySingleton<SmsRepository>(() => SmsRepositoryImpl(sl()));
   sl.registerLazySingleton<FetchMpesaMessages>(() => FetchMpesaMessages(sl()));
-  sl.registerLazySingleton<TransactionRepositoryImpl>(() => TransactionRepositoryImpl());
+  sl.registerLazySingleton<TransactionRepository>(() => TransactionRepositoryImpl(isarService: sl<IsarService>()));
   sl.registerLazySingleton<UpdateTransactionCategory>(() => UpdateTransactionCategory(sl()));
 
-  sl.registerLazySingleton<CategoryRepositoryImpl>(() => CategoryRepositoryImpl(
-        categoryCollection: sl<IsarService>().isar.categoryEntitys,
+  sl.registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(
+        dataSource: IsarCategoryDataSource(sl<IsarService>().isar.categoryEntitys),
       ));
   sl.registerLazySingleton<SaveCategory>(() => SaveCategory(sl()));
   sl.registerLazySingleton<GetCategories>(() => GetCategories(sl()));

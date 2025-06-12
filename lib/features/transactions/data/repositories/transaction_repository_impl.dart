@@ -4,40 +4,35 @@ import 'package:mpesa_finance_tracker/features/transactions/data/models/transact
 import 'package:mpesa_finance_tracker/features/transactions/domain/repositories/transaction_repository.dart';
 
 class TransactionRepositoryImpl implements TransactionRepository {
-  // No longer needs IsarService instance, directly uses static getInstance()
-  // final IsarService _isarService;
-  // TransactionRepositoryImpl(this._isarService);
+  final IsarService isarService;
+  TransactionRepositoryImpl({required this.isarService});
 
   @override
   Future<void> saveTransaction(TransactionEntity transaction) async {
-    final isar = await IsarService.getInstance();
-    await isar.writeTxn(() async {
-      await isar.transactionEntitys.put(transaction);
+    await isarService.isar.writeTxn(() async {
+      await isarService.isar.transactionEntitys.put(transaction);
     });
   }
 
   @override
   Future<List<TransactionEntity>> getTransactions() async {
-    final isar = await IsarService.getInstance();
-    return await isar.transactionEntitys.where().findAll();
+    return await isarService.isar.transactionEntitys.where().findAll();
   }
 
   @override
   Future<void> clearAllTransactions() async {
-    final isar = await IsarService.getInstance();
-    await isar.writeTxn(() async {
-      await isar.transactionEntitys.clear();
+    await isarService.isar.writeTxn(() async {
+      await isarService.isar.transactionEntitys.clear();
     });
   }
 
   @override
   Future<void> updateTransactionCategory(String transactionId, String? category) async {
-    final isar = await IsarService.getInstance();
-    await isar.writeTxn(() async {
-      final transaction = await isar.transactionEntitys.where().transactionIdEqualTo(transactionId).findFirst();
+    await isarService.isar.writeTxn(() async {
+      final transaction = await isarService.isar.transactionEntitys.where().transactionIdEqualTo(transactionId).findFirst();
       if (transaction != null) {
         transaction.category = category;
-        await isar.transactionEntitys.put(transaction);
+        await isarService.isar.transactionEntitys.put(transaction);
       }
     });
   }

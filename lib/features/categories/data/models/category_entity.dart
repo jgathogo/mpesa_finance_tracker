@@ -4,12 +4,12 @@ part 'category_entity.g.dart';
 
 @collection
 class CategoryEntity {
-  Id id = Isar.autoIncrement; // Isar auto-incrementing ID
-
+  Id id;
   @Index(unique: true) // Ensure category names are unique
   late String name;
 
   CategoryEntity({
+    this.id = Isar.autoIncrement,
     required this.name,
   });
 } 
