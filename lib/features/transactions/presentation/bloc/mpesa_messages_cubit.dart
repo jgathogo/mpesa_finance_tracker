@@ -5,24 +5,33 @@ import '../../data/models/transaction_entity.dart';
 import '../../data/mpesa_message_parser.dart';
 import '../../domain/repositories/transaction_repository.dart';
 import '../../domain/usecases/update_transaction_category.dart';
+import '../../domain/entities/sort_option.dart';
 
 /// States for MpesaMessagesCubit.
 abstract class MpesaMessagesState {}
 
-class MpesaMessagesInitial extends MpesaMessagesState {}
+class MpesaMessagesInitial extends MpesaMessagesState {
+  final SortOption currentSortOption;
+  MpesaMessagesInitial({this.currentSortOption = SortOption.dateNewestFirst});
+}
 
-class MpesaMessagesLoading extends MpesaMessagesState {}
+class MpesaMessagesLoading extends MpesaMessagesState {
+  final SortOption currentSortOption;
+  MpesaMessagesLoading({this.currentSortOption = SortOption.dateNewestFirst});
+}
 
 class MpesaMessagesLoaded extends MpesaMessagesState {
   final List<TransactionEntity> messages;
+  final SortOption currentSortOption;
 
-  MpesaMessagesLoaded(this.messages);
+  MpesaMessagesLoaded(this.messages, {this.currentSortOption = SortOption.dateNewestFirst});
 }
 
 class MpesaMessagesError extends MpesaMessagesState {
   final String message;
+  final SortOption currentSortOption;
 
-  MpesaMessagesError(this.message);
+  MpesaMessagesError(this.message, {this.currentSortOption = SortOption.dateNewestFirst});
 }
 
 /// Cubit for managing M-Pesa SMS message state.
@@ -39,12 +48,13 @@ class MpesaMessagesCubit extends Cubit<MpesaMessagesState> {
   ) : super(MpesaMessagesInitial());
 
   /// Fetches M-Pesa messages and updates the state.
-  Future<void> fetchMessages() async {
+  Future<void> fetchMessages({SortOption? sortOption}) async {
     try {
-      emit(MpesaMessagesLoading());
+      final currentSortOption = sortOption ?? (state is MpesaMessagesLoaded ? (state as MpesaMessagesLoaded).currentSortOption : SortOption.dateNewestFirst);
+      emit(MpesaMessagesLoading(currentSortOption: currentSortOption));
       
       // First, get existing transactions to preserve their categories
-      final existingTransactions = await _transactionRepository.getTransactions();
+      final existingTransactions = await _transactionRepository.getTransactions(currentSortOption);
       final existingTransactionsMap = {
         for (var t in existingTransactions) t.transactionId: t
       };
@@ -75,28 +85,36 @@ class MpesaMessagesCubit extends Cubit<MpesaMessagesState> {
       }
 
       // Fetch all transactions from Isar to display (ensures consistency and sorting)
-      final storedTransactions = await _transactionRepository.getTransactions();
+      final storedTransactions = await _transactionRepository.getTransactions(currentSortOption);
 
       if (storedTransactions.isEmpty) {
-        emit(MpesaMessagesLoaded([]));
+        emit(MpesaMessagesLoaded([], currentSortOption: currentSortOption));
       } else {
-        emit(MpesaMessagesLoaded(storedTransactions));
+        emit(MpesaMessagesLoaded(storedTransactions, currentSortOption: currentSortOption));
       }
     } catch (e) {
-      emit(MpesaMessagesError(e.toString()));
+      emit(MpesaMessagesError(e.toString(), currentSortOption: SortOption.dateNewestFirst));
     }
   }
 
   /// Updates the category of a specific transaction.
   Future<void> updateCategory(String transactionId, String? category) async {
     try {
-      emit(MpesaMessagesLoading()); // Or a more specific state if needed
+      // Get the current sort option from the state to maintain it after update
+      final currentSortOption = (state is MpesaMessagesLoaded)
+          ? (state as MpesaMessagesLoaded).currentSortOption
+          : SortOption.dateNewestFirst;
+
+      emit(MpesaMessagesLoading(currentSortOption: currentSortOption)); // Or a more specific state if needed
       await _updateTransactionCategory(transactionId, category);
-      // After updating, re-fetch all messages to update the UI
-      final storedTransactions = await _transactionRepository.getTransactions();
-      emit(MpesaMessagesLoaded(storedTransactions));
+      // After updating, re-fetch all messages to update the UI with the same sorting
+      final storedTransactions = await _transactionRepository.getTransactions(currentSortOption);
+      emit(MpesaMessagesLoaded(storedTransactions, currentSortOption: currentSortOption));
     } catch (e) {
-      emit(MpesaMessagesError(e.toString()));
+      final currentSortOption = (state is MpesaMessagesLoaded)
+          ? (state as MpesaMessagesLoaded).currentSortOption
+          : SortOption.dateNewestFirst;
+      emit(MpesaMessagesError('Failed to update category: $e', currentSortOption: currentSortOption));
     }
   }
 } 

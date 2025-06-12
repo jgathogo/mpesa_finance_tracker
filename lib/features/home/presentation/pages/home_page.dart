@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart'; // Import for date formatting
+import 'package:intl/intl.dart'; // Keep for other potential date formatting needs outside TransactionCard
 import '../../../transactions/presentation/bloc/mpesa_messages_cubit.dart';
-import '../../../transactions/data/models/transaction_entity.dart'; // Import TransactionEntity
-import '../../../transactions/presentation/pages/test_parser_page.dart'; // Import TestParserPage
-import '../../../categories/presentation/pages/category_management_page.dart'; // Import the new category management page
-import '../../../categories/presentation/bloc/category_cubit.dart'; // Import CategoryCubit
+import '../../../transactions/data/models/transaction_entity.dart'; // Still needed for MpesaMessagesLoaded state
+import '../../../transactions/presentation/pages/test_parser_page.dart';
+import '../../../categories/presentation/pages/category_management_page.dart';
+import '../../../categories/presentation/bloc/category_cubit.dart';
+import '../../../transactions/presentation/widgets/transaction_card.dart'; // Import the new TransactionCard
+import '../../../transactions/domain/entities/sort_option.dart'; // Import SortOption
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -93,6 +95,13 @@ class HomePage extends StatelessWidget {
         title: const Text('M-Pesa Transactions'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.sort), // Sort icon
+            onPressed: () {
+              _showSortOptionsDialog(context);
+            },
+            tooltip: 'Sort Transactions',
+          ),
+          IconButton(
             icon: const Icon(Icons.category),
             onPressed: () {
               Navigator.push(
@@ -116,6 +125,15 @@ class HomePage extends StatelessWidget {
       ),
       body: BlocBuilder<MpesaMessagesCubit, MpesaMessagesState>(
         builder: (context, state) {
+          SortOption currentSortOption = SortOption.dateNewestFirst; // Default
+          if (state is MpesaMessagesLoaded) {
+            currentSortOption = state.currentSortOption;
+          } else if (state is MpesaMessagesLoading) {
+            currentSortOption = state.currentSortOption;
+          } else if (state is MpesaMessagesError) {
+            currentSortOption = state.currentSortOption;
+          }
+
           if (state is MpesaMessagesLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is MpesaMessagesLoaded) {
@@ -126,63 +144,7 @@ class HomePage extends StatelessWidget {
                 itemCount: state.messages.length,
                 itemBuilder: (context, index) {
                   final transaction = state.messages[index];
-                  return Card(
-                    margin: const EdgeInsets.all(8.0),
-                    color: _getTransactionCardColor(transaction.transactionType), // Apply card color
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        children: [
-                          Icon(
-                            _getTransactionIcon(transaction.transactionType), // Apply icon
-                            color: _getAmountTextColor(transaction.transactionType), // Icon color matches text
-                          ),
-                          const SizedBox(width: 16.0),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${transaction.transactionId}',
-                                  style: const TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  'Ksh${transaction.amount.toStringAsFixed(2)}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: _getAmountTextColor(transaction.transactionType), // Apply text color
-                                  ),
-                                ),
-                                Text('Type: ${transaction.transactionType.toString().split('.').last}'),
-                                Text('Sender/Recipient: ${transaction.senderRecipient}'),
-                                Text('Date: ${DateFormat('yyyy-MM-dd HH:mm').format(transaction.dateTime)}'),
-                                // Display category if available
-                                if (transaction.category != null && transaction.category!.isNotEmpty)
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 4.0),
-                                    child: Text(
-                                      'Category: ${transaction.category}',
-                                      style: const TextStyle(fontSize: 12, color: Colors.black54),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.category),
-                            onPressed: () {
-                              _showCategorySelectionDialog(
-                                context,
-                                transaction.transactionId,
-                                transaction.category,
-                              );
-                            },
-                            tooltip: 'Assign Category',
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
+                  return TransactionCard(transaction: transaction); // Use the reusable widget
                 },
               );
             }
@@ -195,61 +157,39 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  void _showCategorySelectionDialog(
-    BuildContext context,
-    String transactionId,
-    String? currentCategory,
-  ) {
-    showDialog(
+  void _showSortOptionsDialog(BuildContext context) {
+    final currentSortOption = BlocProvider.of<MpesaMessagesCubit>(context).state is MpesaMessagesLoaded
+        ? (BlocProvider.of<MpesaMessagesCubit>(context).state as MpesaMessagesLoaded).currentSortOption
+        : SortOption.dateNewestFirst; // Default if state is not loaded
+
+    showModalBottomSheet(
       context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: const Text('Select Category'),
-          content: SingleChildScrollView(
-            child: BlocBuilder<CategoryCubit, CategoryState>(
-              builder: (blocContext, categoryState) {
-                if (categoryState is CategoryLoaded) {
-                  final categories = categoryState.categories;
-                  return ListBody(
-                    children: categories.map((category) {
-                      return ListTile(
-                        title: Text(category.name),
-                        trailing: currentCategory == category.name ? const Icon(Icons.check) : null,
-                        onTap: () {
-                          BlocProvider.of<MpesaMessagesCubit>(context)
-                              .updateCategory(transactionId, category.name);
-                          Navigator.of(dialogContext).pop();
-                        },
-                      );
-                    }).toList(),
-                  );
-                } else if (categoryState is CategoryLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (categoryState is CategoryError) {
-                  return Center(child: Text('Error loading categories: ${categoryState.message}'));
-                }
-                return const Center(child: Text('No custom categories found.'));
-              },
-            ),
+      builder: (BuildContext bc) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              _buildSortOptionTile(context, 'Date (Newest First)', SortOption.dateNewestFirst, currentSortOption, Icons.date_range),
+              _buildSortOptionTile(context, 'Date (Oldest First)', SortOption.dateOldestFirst, currentSortOption, Icons.date_range),
+              _buildSortOptionTile(context, 'Category (A-Z)', SortOption.categoryAscending, currentSortOption, Icons.category),
+              _buildSortOptionTile(context, 'Amount (Highest First)', SortOption.amountHighestFirst, currentSortOption, Icons.money),
+              _buildSortOptionTile(context, 'Amount (Lowest First)', SortOption.amountLowestFirst, currentSortOption, Icons.money),
+              _buildSortOptionTile(context, 'Type (Money In First)', SortOption.typeMoneyInFirst, currentSortOption, Icons.transform),
+              _buildSortOptionTile(context, 'Type (Money Out First)', SortOption.typeMoneyOutFirst, currentSortOption, Icons.transform),
+            ],
           ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-              },
-            ),
-            if (currentCategory != null) // Option to clear category
-              TextButton(
-                child: const Text('Clear Category'),
-                onPressed: () {
-                  BlocProvider.of<MpesaMessagesCubit>(context)
-                      .updateCategory(transactionId, null); // Clear category
-                  Navigator.of(dialogContext).pop();
-                },
-              ),
-          ],
         );
+      },
+    );
+  }
+
+  ListTile _buildSortOptionTile(BuildContext context, String title, SortOption option, SortOption currentSortOption, IconData icon) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(title),
+      trailing: currentSortOption == option ? const Icon(Icons.check) : null,
+      onTap: () {
+        BlocProvider.of<MpesaMessagesCubit>(context).fetchMessages(sortOption: option);
+        Navigator.pop(context);
       },
     );
   }

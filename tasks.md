@@ -63,12 +63,14 @@
 ## 🔜 Backlog / Future Tasks
 
 * **Phase 3: Design & UI/UX Refinement**  
-  * [ ] Task 3.1: Create wireframes for core screens.  
-  * [ ] Task 3.2: Build reusable Flutter UI components.  
+  * [x] Task 3.1: Create wireframes for core screens.  
+  * [x] Task 3.2: Build reusable Flutter UI components.  
+  * [x] Task 3.3: Implement transaction sorting options on Home Page.
+  * [ ] Task 3.4: Implement UI Widget Tests for Phase 3 components.
 
 * **Phase 4: Receipt Management & Enhanced Local Features**  
-  * [ ] Task 4.1: Capture or select receipt images.  
-  * [ ] Task 4.2: Compress images before saving.  
+  * [x] Task 4.1: Capture or select receipt images.  
+  * [x] Task 4.2: Compress images before saving.  
   * [ ] Task 4.3: Save local reference to image.  
   * [ ] Task 4.4: Add local filtering & search.  
   * [ ] Task 4.5: Build basic summaries & insights.  
@@ -121,4 +123,5 @@
 * **Important Note on Isar Schema Changes:** When modifying Isar `@collection` or `@Index` annotations (e.g., adding `unique: true`), you must:
     1. Run `flutter pub run build_runner build` to regenerate `.g.dart` files.
     2. **Clear app data** (or uninstall/reinstall the app) on your device/emulator to ensure the database schema is re-initialized correctly. Failing to do so can lead to unexpected behavior or crashes.
-* **Regular Codebase Cleanup:** Periodically review the codebase to remove unused imports, unnecessary files, and commented-out code. This keeps the project lean, readable, and improves maintainability for future development. 
+* **Regular Codebase Cleanup:** Periodically review the codebase to remove unused imports, unnecessary files, and commented-out code. This keeps the project lean, readable, and improves maintainability for future development.
+* **Persistent Test Loading Error:** Encountered a persistent "Failed to load \"...\": Does not exist." error when attempting to run widget tests, even after `flutter clean` and `flutter pub get`. The test file `test/widget/features/transactions/transaction_card_test.dart` is confirmed to exist. This issue requires further external investigation (e.g., IDE/OS restart, path checks) before UI tests can be reliably executed. To be revisited. 
