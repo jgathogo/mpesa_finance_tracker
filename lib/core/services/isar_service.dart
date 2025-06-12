@@ -1,24 +1,28 @@
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:mpesa_finance_tracker/features/transactions/data/models/transaction_entity.dart';
+import 'package:mpesa_finance_tracker/features/categories/data/models/category_entity.dart';
 import 'dart:io';
 
 class IsarService {
-  static Isar? _isar;
+  Isar? _isar;
 
-  /// Returns the singleton Isar instance, initializing it if necessary.
-  static Future<Isar> getInstance() async {
-    if (_isar != null) return _isar!;
+  Isar get isar => _isar!;
+
+  IsarService(); // Public constructor
+
+  /// Initializes the Isar instance.
+  Future<void> init() async {
+    if (_isar != null) return;
     final dir = await getApplicationDocumentsDirectory();
     _isar = await Isar.open(
-      [TransactionEntitySchema],
+      [TransactionEntitySchema, CategoryEntitySchema],
       directory: dir.path,
     );
-    return _isar!;
   }
 
   /// Closes the Isar instance (for cleanup/testing)
-  static Future<void> close() async {
+  Future<void> close() async {
     await _isar?.close();
     _isar = null;
   }

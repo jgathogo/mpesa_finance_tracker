@@ -4,7 +4,7 @@
 
 ## 📝 Description:**
 
-The M-Pesa SMS Finance Tracker is a mobile application designed to empower individuals with automated and efficient tracking of their M-Pesa transactions. Its core functionality centers on reading and parsing M-Pesa transaction SMS messages on the user’s phone. The application will identify relevant M-Pesa SMS messages, extract key financial details such as transaction ID, date, amount, sender/recipient, and transaction type (e.g., PayBill, Till, Money In/Out). Users will have the option to upload associated receipts (photos or screenshots) and categorize their transactions for better financial organization. Initially, all parsed and categorized data will be stored securely on the user's device, with a future phase planned for synchronization to an online database for broader accessibility and backup.
+The M-Pesa SMS Finance Tracker is a mobile application designed to empower individuals with automated and efficient tracking of their M-Pesa transactions. Its core functionality centers on reading and parsing M-Pesa transaction SMS messages on the user's phone. The application will identify relevant M-Pesa SMS messages, extract key financial details such as transaction ID, date, amount, sender/recipient, and transaction type (e.g., PayBill, Till, Money In/Out). Users will have the option to upload associated receipts (photos or screenshots) and categorize their transactions for better financial organization. Initially, all parsed and categorized data will be stored securely on the user's device, with a future phase planned for synchronization to an online database for broader accessibility and backup.
 
 ## ❗ Problem:**
 
@@ -34,7 +34,7 @@ Upon successful validation by the initial user, the target audience will expand 
 
 ## 📱 Product Overview:**
 
-The M-Pesa SMS Finance Tracker will offer a streamlined user experience, primarily focusing on automated transaction capture. Upon initial launch or when the user initiates SMS tracking, the app will request necessary SMS reading permissions with a clear explanation of its purpose. Once granted, it will access the SMS inbox, identify M-Pesa transaction messages, and parse them to extract critical details like transaction ID, amount, date, time, and type. These parsed transactions will be presented to the user in a clean, chronological list. For each transaction, the user will be prompted to optionally upload a corresponding receipt (either by taking a new photo or selecting a screenshot from their gallery). A user-friendly interface will also allow for categorization of each transaction (e.g., "Groceries," "Transport," "Utilities").
+The M-Pesa SMS Finance Tracker will offer a streamlined user experience, primarily focusing on automated transaction capture. Upon initial launch or when the user initiates SMS tracking, the app will request necessary SMS reading permissions with a clear explanation of its purpose. Once granted, it will access the SMS inbox, identify M-Pesa transaction messages, and parse them to extract critical details like transaction ID, amount, date, time, and type. These parsed transactions will be presented to the user in a clean, chronological list. For each transaction, the user will be prompted to optionally upload a corresponding receipt (either by taking a new photo or selecting a screenshot from their gallery). A user-friendly interface will also allow for categorization of each transaction (e.g., "Groceries," "Transport," "Utilities"), and users will be able to manage their custom categories.
 
 **High-Level Architecture Description:**
 
@@ -79,6 +79,7 @@ The project will adopt an agile, iterative approach, with an initial focus on de
 3. **Basic Transaction Listing & Categorization:**  
    * Display a chronological list of locally stored M-Pesa transactions.  
    * Provide a basic UI for users to manually assign categories to each transaction.  
+   * Implement functionality for users to add, edit, and delete custom categories.
 4. **Initial UI/UX:**  
    * Design clean and intuitive screens for permission requests, transaction listing, and categorization.
 

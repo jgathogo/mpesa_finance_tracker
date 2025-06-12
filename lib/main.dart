@@ -1,52 +1,77 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'features/permissions/presentation/pages/permission_page.dart';
+import 'features/transactions/presentation/bloc/mpesa_messages_cubit.dart';
+import 'features/transactions/domain/usecases/fetch_mpesa_messages.dart';
+import 'features/transactions/data/sms_repository_impl.dart';
+import 'features/transactions/data/sms_inbox_service.dart';
 import 'core/services/isar_service.dart';
+import 'features/transactions/data/repositories/transaction_repository_impl.dart';
+import 'features/transactions/domain/usecases/update_transaction_category.dart';
+import 'features/categories/data/models/category_entity.dart';
+import 'features/categories/data/repositories/category_repository_impl.dart';
+import 'features/categories/domain/usecases/save_category.dart';
+import 'features/categories/domain/usecases/get_categories.dart';
+import 'features/categories/domain/usecases/update_category.dart';
+import 'features/categories/domain/usecases/delete_category.dart';
+import 'features/categories/presentation/bloc/category_cubit.dart';
 
-void main() async {
+final GetIt sl = GetIt.instance;
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await IsarService.getInstance();
+
+  sl.registerSingleton<IsarService>(IsarService());
+  await sl<IsarService>().init();
+
+  sl.registerLazySingleton<SmsInboxService>(() => SmsInboxService());
+  sl.registerLazySingleton<SmsRepositoryImpl>(() => SmsRepositoryImpl(sl()));
+  sl.registerLazySingleton<FetchMpesaMessages>(() => FetchMpesaMessages(sl()));
+  sl.registerLazySingleton<TransactionRepositoryImpl>(() => TransactionRepositoryImpl());
+  sl.registerLazySingleton<UpdateTransactionCategory>(() => UpdateTransactionCategory(sl()));
+
+  sl.registerLazySingleton<CategoryRepositoryImpl>(() => CategoryRepositoryImpl(
+        categoryCollection: sl<IsarService>().isar.categoryEntitys,
+      ));
+  sl.registerLazySingleton<SaveCategory>(() => SaveCategory(sl()));
+  sl.registerLazySingleton<GetCategories>(() => GetCategories(sl()));
+  sl.registerLazySingleton<UpdateCategory>(() => UpdateCategory(sl()));
+  sl.registerLazySingleton<DeleteCategory>(() => DeleteCategory(sl()));
+
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'M-Pesa SMS Finance Tracker',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-        useMaterial3: true,
-      ),
-      home: const HomeScreen(),
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Isar initialized!'),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => MpesaMessagesCubit(
+            sl(),
+            sl(),
+            sl(),
+          )..fetchMessages(),
+        ),
+        BlocProvider(
+          create: (_) => CategoryCubit(
+            sl(),
+            sl(),
+            sl(),
+            sl(),
+          )..fetchCategories(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'M-Pesa Finance Tracker',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+          useMaterial3: true,
+        ),
+        home: const PermissionPage(),
       ),
     );
   }

@@ -35,22 +35,28 @@
     * [x] Task 2.3.2: Create parsing functions to extract all relevant fields.  
     * [x] Task 2.3.3: Preprocess SMS content before parsing.  
     * [x] Task 2.3.4: Modularise parsing functions.  
-  * [ ] Task 2.4: Validate SMS Parsing on Emulator and My Phone  
-    * [ ] Task 2.4.1: Prepare real SMS test set.  
-    * [ ] Task 2.4.2: Build test interface.  
-    * [ ] Task 2.4.3: Validate parsing on emulator.  
-    * [ ] Task 2.4.4: Validate parsing on real device.  
-    * [ ] Task 2.4.5: Log edge cases and failures.  
+  * [x] Task 2.4: Validate SMS Parsing on Emulator and My Phone
+    * [x] Task 2.4.1: Prepare real SMS test set.
+    * [x] Task 2.4.2: Build test interface.
+    * [x] Task 2.4.3: Validate parsing on emulator.
+    * [x] Task 2.4.4: Validate parsing on real device.
+    * [x] Task 2.4.5: Log edge cases and failures.  
   * [x] Task 2.5: Implement Local Storage for Parsed Transactions  
-    * [ ] Task 2.5.1: Create repository service.  
-    * [ ] Task 2.5.2: Persist parsed data to Isar.  
+    * [x] Task 2.5.1: Create repository service.  
+    * [x] Task 2.5.2: Persist parsed data to Isar.  
   * [x] Task 2.6: Display Parsed Transactions in List View  
     * [x] Task 2.6.1: Design transaction list UI.  
     * [x] Task 2.6.2: Fetch from Isar and render list.  
-    * [ ] Task 2.6.3: Style by transaction type.  
-  * [ ] Task 2.7: Add Basic User Categorisation Interface  
-    * [ ] Task 2.7.1: Build category input (dropdown or text).  
-    * [ ] Task 2.7.2: Update category field in Isar.  
+    * [x] Task 2.6.3: Style by transaction type.  
+  * [x] Task 2.7: Add Basic User Categorisation Interface  
+    * [x] Task 2.7.1: Build category input (dropdown or text).  
+    * [x] Task 2.7.2: Update category field in Isar.  
+  * [x] Task 2.8: Implement Category Management (Add, Edit, Delete)
+    * [ ] Task 2.8.1: Define CategoryEntity schema with Isar annotations.
+    * [ ] Task 2.8.2: Implement repository and use cases for CRUD operations on categories.
+    * [x] Task 2.8.3: Design and implement a UI for category management (e.g., a dedicated settings page).
+    * [x] Task 2.8.4: Integrate dynamic categories into the transaction categorization flow.
+    * [ ] Task 2.8.5: Add unit tests for category management logic.
 
 ---
 
