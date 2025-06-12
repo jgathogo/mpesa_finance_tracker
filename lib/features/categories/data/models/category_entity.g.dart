@@ -77,9 +77,9 @@ CategoryEntity _categoryEntityDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = CategoryEntity(
+    id: id,
     name: reader.readString(offsets[0]),
   );
-  object.id = id;
   return object;
 }
 

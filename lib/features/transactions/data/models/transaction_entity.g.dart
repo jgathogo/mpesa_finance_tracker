@@ -73,7 +73,7 @@ const TransactionEntitySchema = CollectionSchema(
     r'transactionId': IndexSchema(
       id: 8561542235958051982,
       name: r'transactionId',
-      unique: false,
+      unique: true,
       replace: false,
       properties: [
         IndexPropertySchema(
@@ -246,6 +246,63 @@ List<IsarLinkBase<dynamic>> _transactionEntityGetLinks(
 void _transactionEntityAttach(
     IsarCollection<dynamic> col, Id id, TransactionEntity object) {
   object.id = id;
+}
+
+extension TransactionEntityByIndex on IsarCollection<TransactionEntity> {
+  Future<TransactionEntity?> getByTransactionId(String transactionId) {
+    return getByIndex(r'transactionId', [transactionId]);
+  }
+
+  TransactionEntity? getByTransactionIdSync(String transactionId) {
+    return getByIndexSync(r'transactionId', [transactionId]);
+  }
+
+  Future<bool> deleteByTransactionId(String transactionId) {
+    return deleteByIndex(r'transactionId', [transactionId]);
+  }
+
+  bool deleteByTransactionIdSync(String transactionId) {
+    return deleteByIndexSync(r'transactionId', [transactionId]);
+  }
+
+  Future<List<TransactionEntity?>> getAllByTransactionId(
+      List<String> transactionIdValues) {
+    final values = transactionIdValues.map((e) => [e]).toList();
+    return getAllByIndex(r'transactionId', values);
+  }
+
+  List<TransactionEntity?> getAllByTransactionIdSync(
+      List<String> transactionIdValues) {
+    final values = transactionIdValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'transactionId', values);
+  }
+
+  Future<int> deleteAllByTransactionId(List<String> transactionIdValues) {
+    final values = transactionIdValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'transactionId', values);
+  }
+
+  int deleteAllByTransactionIdSync(List<String> transactionIdValues) {
+    final values = transactionIdValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'transactionId', values);
+  }
+
+  Future<Id> putByTransactionId(TransactionEntity object) {
+    return putByIndex(r'transactionId', object);
+  }
+
+  Id putByTransactionIdSync(TransactionEntity object, {bool saveLinks = true}) {
+    return putByIndexSync(r'transactionId', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllByTransactionId(List<TransactionEntity> objects) {
+    return putAllByIndex(r'transactionId', objects);
+  }
+
+  List<Id> putAllByTransactionIdSync(List<TransactionEntity> objects,
+      {bool saveLinks = true}) {
+    return putAllByIndexSync(r'transactionId', objects, saveLinks: saveLinks);
+  }
 }
 
 extension TransactionEntityQueryWhereSort

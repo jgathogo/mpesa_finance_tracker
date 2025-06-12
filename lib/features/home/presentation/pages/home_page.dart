@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 import 'package:intl/intl.dart'; // Import for date formatting
 import '../../../transactions/presentation/bloc/mpesa_messages_cubit.dart';
-import '../../../transactions/domain/usecases/fetch_mpesa_messages.dart';
-import '../../../transactions/data/sms_repository_impl.dart';
-import '../../../transactions/data/sms_inbox_service.dart';
 import '../../../transactions/data/models/transaction_entity.dart'; // Import TransactionEntity
 import '../../../transactions/presentation/pages/test_parser_page.dart'; // Import TestParserPage
-import 'package:mpesa_finance_tracker/core/services/isar_service.dart'; // Corrected Import IsarService path to package import
-import '../../../transactions/data/repositories/transaction_repository_impl.dart'; // Import TransactionRepositoryImpl
-import '../../../transactions/domain/usecases/update_transaction_category.dart'; // Import the new use case
 import '../../../categories/presentation/pages/category_management_page.dart'; // Import the new category management page
 import '../../../categories/presentation/bloc/category_cubit.dart'; // Import CategoryCubit
 

@@ -42,25 +42,39 @@ class MpesaMessagesCubit extends Cubit<MpesaMessagesState> {
   Future<void> fetchMessages() async {
     try {
       emit(MpesaMessagesLoading());
+      
+      // First, get existing transactions to preserve their categories
+      final existingTransactions = await _transactionRepository.getTransactions();
+      final existingTransactionsMap = {
+        for (var t in existingTransactions) t.transactionId: t
+      };
+
+      // Fetch and parse new SMS messages
       final smsMessages = await _fetchMpesaMessages();
       final parsedTransactions = <TransactionEntity>[];
 
       for (var sms in smsMessages) {
         final transaction = _parser.parseMessage(sms);
         if (transaction != null) {
+          // Check if this transaction already exists
+          final existingTransaction = existingTransactionsMap[transaction.transactionId];
+          if (existingTransaction != null) {
+            // Preserve the category and crucially, set the Isar ID
+            transaction.category = existingTransaction.category;
+            transaction.id = existingTransaction.id;
+          }
           parsedTransactions.add(transaction);
         }
       }
 
-      // Save parsed transactions to Isar
+      // Save parsed transactions to Isar (this will update existing or insert new)
       if (parsedTransactions.isNotEmpty) {
-        await _transactionRepository.clearAllTransactions(); // Clear existing to prevent duplicates for now
         for (var transaction in parsedTransactions) {
           await _transactionRepository.saveTransaction(transaction);
         }
       }
 
-      // Fetch all transactions from Isar to display (ensures consistency)
+      // Fetch all transactions from Isar to display (ensures consistency and sorting)
       final storedTransactions = await _transactionRepository.getTransactions();
 
       if (storedTransactions.isEmpty) {
@@ -82,7 +96,7 @@ class MpesaMessagesCubit extends Cubit<MpesaMessagesState> {
       final storedTransactions = await _transactionRepository.getTransactions();
       emit(MpesaMessagesLoaded(storedTransactions));
     } catch (e) {
-      emit(MpesaMessagesError('Failed to update category: $e'));
+      emit(MpesaMessagesError(e.toString()));
     }
   }
 } 

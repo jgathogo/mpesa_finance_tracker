@@ -16,7 +16,10 @@ class TransactionRepositoryImpl implements TransactionRepository {
 
   @override
   Future<List<TransactionEntity>> getTransactions() async {
-    return await isarService.isar.transactionEntitys.where().findAll();
+    // Get all transactions and sort them by date in descending order
+    final transactions = await isarService.isar.transactionEntitys.where().findAll();
+    transactions.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+    return transactions;
   }
 
   @override

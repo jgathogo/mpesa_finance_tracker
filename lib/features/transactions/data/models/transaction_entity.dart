@@ -8,7 +8,7 @@ class TransactionEntity {
   Id id = Isar.autoIncrement;
 
   /// M-Pesa transaction ID
-  @Index()
+  @Index(unique: true)
   late String transactionId;
 
   /// Date and time of the transaction

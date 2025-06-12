@@ -117,4 +117,8 @@
 * Add code comments and keep feature docs current.  
 * Implement unit tests, especially for parsing and storage logic.  
 * Handle permission denials, file errors, and sync failures gracefully.  
-* Ensure compliance with the Kenya Data Protection Act (2019). 
+* Ensure compliance with the Kenya Data Protection Act (2019).
+* **Important Note on Isar Schema Changes:** When modifying Isar `@collection` or `@Index` annotations (e.g., adding `unique: true`), you must:
+    1. Run `flutter pub run build_runner build` to regenerate `.g.dart` files.
+    2. **Clear app data** (or uninstall/reinstall the app) on your device/emulator to ensure the database schema is re-initialized correctly. Failing to do so can lead to unexpected behavior or crashes.
+* **Regular Codebase Cleanup:** Periodically review the codebase to remove unused imports, unnecessary files, and commented-out code. This keeps the project lean, readable, and improves maintainability for future development. 
