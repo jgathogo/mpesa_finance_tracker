@@ -9,6 +9,7 @@ import 'features/transactions/data/sms_inbox_service.dart';
 import 'core/services/isar_service.dart';
 import 'features/transactions/data/repositories/transaction_repository_impl.dart';
 import 'features/transactions/domain/usecases/update_transaction_category.dart';
+import 'features/transactions/domain/usecases/update_transaction_receipt_image.dart';
 import 'features/categories/data/models/category_entity.dart';
 import 'features/categories/data/repositories/category_repository_impl.dart';
 import 'features/categories/domain/usecases/save_category.dart';
@@ -34,6 +35,7 @@ Future<void> main() async {
   sl.registerLazySingleton<FetchMpesaMessages>(() => FetchMpesaMessages(sl()));
   sl.registerLazySingleton<TransactionRepository>(() => TransactionRepositoryImpl(isarService: sl<IsarService>()));
   sl.registerLazySingleton<UpdateTransactionCategory>(() => UpdateTransactionCategory(sl()));
+  sl.registerLazySingleton<UpdateTransactionReceiptImage>(() => UpdateTransactionReceiptImage(sl()));
 
   sl.registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(
         dataSource: IsarCategoryDataSource(sl<IsarService>().isar.categoryEntitys),
@@ -55,6 +57,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) => MpesaMessagesCubit(
+            sl(),
             sl(),
             sl(),
             sl(),

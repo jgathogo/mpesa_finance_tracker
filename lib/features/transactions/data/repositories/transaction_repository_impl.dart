@@ -72,4 +72,15 @@ class TransactionRepositoryImpl implements TransactionRepository {
       }
     });
   }
+
+  @override
+  Future<void> updateTransactionReceiptImage(String transactionId, String? receiptImageRef) async {
+    await isarService.isar.writeTxn(() async {
+      final transaction = await isarService.isar.transactionEntitys.where().transactionIdEqualTo(transactionId).findFirst();
+      if (transaction != null) {
+        transaction.receiptImageRef = receiptImageRef;
+        await isarService.isar.transactionEntitys.put(transaction);
+      }
+    });
+  }
 } 

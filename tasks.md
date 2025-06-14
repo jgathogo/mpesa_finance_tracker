@@ -71,8 +71,9 @@
 * **Phase 4: Receipt Management & Enhanced Local Features**  
   * [x] Task 4.1: Capture or select receipt images.  
   * [x] Task 4.2: Compress images before saving.  
-  * [ ] Task 4.3: Save local reference to image.  
-  * [ ] Task 4.4: Add local filtering & search.  
+  * [x] Task 4.3: Save local reference to image.  
+  * [x] Task 4.3.1: Implement user-friendly receipt link display.  
+  * [x] Task 4.4: Add local filtering & search.  
   * [ ] Task 4.5: Build basic summaries & insights.  
 
 * **Phase 5: Online Synchronization & Authentication**  

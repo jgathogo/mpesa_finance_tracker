@@ -6,4 +6,5 @@ abstract class TransactionRepository {
   Future<List<TransactionEntity>> getTransactions(SortOption sortOption);
   Future<void> clearAllTransactions();
   Future<void> updateTransactionCategory(String transactionId, String? category);
+  Future<void> updateTransactionReceiptImage(String transactionId, String? receiptImageRef);
 } 

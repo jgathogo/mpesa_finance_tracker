@@ -6,6 +6,7 @@ import '../../data/mpesa_message_parser.dart';
 import '../../domain/repositories/transaction_repository.dart';
 import '../../domain/usecases/update_transaction_category.dart';
 import '../../domain/entities/sort_option.dart';
+import '../../domain/usecases/update_transaction_receipt_image.dart';
 
 /// States for MpesaMessagesCubit.
 abstract class MpesaMessagesState {}
@@ -40,11 +41,13 @@ class MpesaMessagesCubit extends Cubit<MpesaMessagesState> {
   final MpesaMessageParser _parser = MpesaMessageParser();
   final TransactionRepository _transactionRepository;
   final UpdateTransactionCategory _updateTransactionCategory;
+  final UpdateTransactionReceiptImage _updateTransactionReceiptImage;
 
   MpesaMessagesCubit(
     this._fetchMpesaMessages,
     this._transactionRepository,
     this._updateTransactionCategory,
+    this._updateTransactionReceiptImage,
   ) : super(MpesaMessagesInitial());
 
   /// Fetches M-Pesa messages and updates the state.
@@ -72,6 +75,8 @@ class MpesaMessagesCubit extends Cubit<MpesaMessagesState> {
             // Preserve the category and crucially, set the Isar ID
             transaction.category = existingTransaction.category;
             transaction.id = existingTransaction.id;
+            // Reason: Preserve the existing receipt image reference for persistence
+            transaction.receiptImageRef = existingTransaction.receiptImageRef;
           }
           parsedTransactions.add(transaction);
         }
@@ -115,6 +120,27 @@ class MpesaMessagesCubit extends Cubit<MpesaMessagesState> {
           ? (state as MpesaMessagesLoaded).currentSortOption
           : SortOption.dateNewestFirst;
       emit(MpesaMessagesError('Failed to update category: $e', currentSortOption: currentSortOption));
+    }
+  }
+
+  /// Updates the receipt image reference for a specific transaction.
+  Future<void> updateReceiptImage(String transactionId, String? receiptImageRef) async {
+    try {
+      // Get the current sort option from the state to maintain it after update
+      final currentSortOption = (state is MpesaMessagesLoaded)
+          ? (state as MpesaMessagesLoaded).currentSortOption
+          : SortOption.dateNewestFirst;
+
+      emit(MpesaMessagesLoading(currentSortOption: currentSortOption));
+      await _updateTransactionReceiptImage(transactionId, receiptImageRef);
+      // After updating, re-fetch all messages to update the UI with the same sorting
+      final storedTransactions = await _transactionRepository.getTransactions(currentSortOption);
+      emit(MpesaMessagesLoaded(storedTransactions, currentSortOption: currentSortOption));
+    } catch (e) {
+      final currentSortOption = (state is MpesaMessagesLoaded)
+          ? (state as MpesaMessagesLoaded).currentSortOption
+          : SortOption.dateNewestFirst;
+      emit(MpesaMessagesError('Failed to update receipt image: $e', currentSortOption: currentSortOption));
     }
   }
 } 

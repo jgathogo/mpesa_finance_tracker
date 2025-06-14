@@ -9,6 +9,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart'; // Import f
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:path/path.dart' as p;
+import 'package:open_filex/open_filex.dart'; // Import open_filex
 
 class TransactionCard extends StatelessWidget {
   final TransactionEntity transaction;
@@ -129,9 +130,9 @@ class TransactionCard extends StatelessWidget {
   // New method to compress images
   Future<String?> _compressImage(String imagePath) async {
     try {
-      final Directory tempDir = await getTemporaryDirectory();
+      final Directory appDocDir = await getApplicationDocumentsDirectory();
       final String targetPath = p.join(
-        tempDir.path,
+        appDocDir.path,
         'compressed_receipt_${DateTime.now().millisecondsSinceEpoch}.jpg',
       );
 
@@ -169,7 +170,9 @@ class TransactionCard extends StatelessWidget {
                     final compressedPath = await _compressImage(image.path);
                     if (compressedPath != null) {
                       print('Picked and compressed image path: $compressedPath');
-                      // TODO: Pass compressedPath to a BLoC/Cubit to save it (Task 4.3)
+                      // Update the transaction with the receipt image reference
+                      BlocProvider.of<MpesaMessagesCubit>(context)
+                          .updateReceiptImage(transactionId, compressedPath);
                     } else {
                       print('Image compression failed for gallery pick.');
                     }
@@ -186,7 +189,9 @@ class TransactionCard extends StatelessWidget {
                     final compressedPath = await _compressImage(image.path);
                     if (compressedPath != null) {
                       print('Taken and compressed image path: $compressedPath');
-                      // TODO: Pass compressedPath to a BLoC/Cubit to save it (Task 4.3)
+                      // Update the transaction with the receipt image reference
+                      BlocProvider.of<MpesaMessagesCubit>(context)
+                          .updateReceiptImage(transactionId, compressedPath);
                     } else {
                       print('Image compression failed for camera shot.');
                     }
@@ -242,13 +247,33 @@ class TransactionCard extends StatelessWidget {
                         style: const TextStyle(fontSize: 12, color: Colors.black54),
                       ),
                     ),
-                  // Display receipt image reference if available
+                  // Display receipt image if available
                   if (transaction.receiptImageRef != null && transaction.receiptImageRef!.isNotEmpty)
                     Padding(
-                      padding: const EdgeInsets.only(top: 4.0),
-                      child: Text(
-                        'Receipt: ${transaction.receiptImageRef!.split('/').last}',
-                        style: const TextStyle(fontSize: 12, color: Colors.blueAccent),
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: InkWell(
+                          onTap: () async {
+                            try {
+                              final file = File(transaction.receiptImageRef!);
+                              if (await file.exists()) {
+                                await OpenFilex.open(transaction.receiptImageRef!);
+                              } else {
+                                debugPrint('Receipt file does not exist: ${transaction.receiptImageRef}');
+                              }
+                            } catch (e) {
+                              debugPrint('Error opening receipt: $e');
+                            }
+                          },
+                          child: const Text(
+                            'Receipt',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   SizedBox(height: 8.0), // Spacer
