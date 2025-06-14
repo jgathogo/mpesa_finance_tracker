@@ -1,6 +1,11 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mpesa_finance_tracker/core/services/injection_container.dart' as di;
+import 'package:mpesa_finance_tracker/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:mpesa_finance_tracker/features/auth/presentation/pages/login_page.dart';
+import 'features/home/presentation/pages/home_page.dart';
 import 'features/permissions/presentation/pages/permission_page.dart';
 import 'features/transactions/presentation/bloc/mpesa_messages_cubit.dart';
 import 'features/transactions/domain/usecases/fetch_mpesa_messages.dart';
@@ -26,6 +31,9 @@ final GetIt sl = GetIt.instance;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp();
+  await di.init();
 
   sl.registerSingleton<IsarService>(IsarService());
   await sl<IsarService>().init();
@@ -56,6 +64,14 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
+          create: (_) => AuthBloc(
+            signInUseCase: sl(),
+            signUpUseCase: sl(),
+            signOutUseCase: sl(),
+            getAuthStatusUseCase: sl(),
+          ),
+        ),
+        BlocProvider(
           create: (_) => MpesaMessagesCubit(
             sl(),
             sl(),
@@ -78,7 +94,15 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
           useMaterial3: true,
         ),
-        home: const PermissionPage(),
+        home: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            if (state is AuthAuthenticated) {
+              return const HomePage();
+            } else {
+              return const LoginPage();
+            }
+          },
+        ),
       ),
     );
   }

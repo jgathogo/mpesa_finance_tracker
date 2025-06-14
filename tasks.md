@@ -79,11 +79,11 @@
 * **Phase 5: Online Synchronization & Authentication**  
   * [ ] Task 5.0: Firebase Backend Setup  
     * [ ] Task 5.0.1: Review Firebase pricing.  
-    * [ ] Task 5.0.2: Create Firebase project.  
-    * [ ] Task 5.0.3: Link Firebase project to app.  
-  * [ ] Task 5.1: Implement Firebase Authentication  
-    * [ ] Task 5.1.1: Add Auth dependencies.  
-    * [ ] Task 5.1.2: Register/login/logout.  
+    * [x] Task 5.0.2: Create Firebase project.  
+    * [x] Task 5.0.3: Link Firebase project to app.  
+  * [x] Task 5.1: Implement Firebase Authentication  
+    * [x] Task 5.1.1: Add Auth dependencies.  
+    * [x] Task 5.1.2: Register/login/logout.  
   * [ ] Task 5.2: Create Firebase Security Rules  
     * [ ] Task 5.2.1: Restrict Firestore access by user.  
     * [ ] Task 5.2.2: Secure receipt storage.  
