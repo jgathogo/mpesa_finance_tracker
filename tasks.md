@@ -84,9 +84,9 @@
   * [x] Task 5.1: Implement Firebase Authentication  
     * [x] Task 5.1.1: Add Auth dependencies.  
     * [x] Task 5.1.2: Register/login/logout.  
-  * [ ] Task 5.2: Create Firebase Security Rules  
-    * [ ] Task 5.2.1: Restrict Firestore access by user.  
-    * [ ] Task 5.2.2: Secure receipt storage.  
+  * [x] Task 5.2: Create Firebase Security Rules  
+    * [x] Task 5.2.1: Restrict Firestore access by user.  
+    * [x] Task 5.2.2: Secure receipt storage.  
   * [ ] Task 5.3: Implement Encryption  
     * [ ] Task 5.3.1: Setup flutter_secure_storage.  
     * [ ] Task 5.3.2: Encrypt sensitive fields.  
